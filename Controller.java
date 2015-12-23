@@ -33,20 +33,38 @@ public class Controller {
   
   /* This method send the closest elevator to a floor
   */
-  public void sendClosestElevator(int requestingFloor) {
+  public void sendClosestElevator(int requestingFloor, int destinationFloor) {
     int closestElevDistance = maxFloors;
+    int closestElevIndex = 0;
     for(int i = 0; i < numElevators; i++){
        if(elevators[i].currentFloor() == requestingFloor && 
           !elevators[i].isOccupied() &&
           elevators[i].isInService()){
-         elevators[i].pickUpPassenger();
-         break;
+         elevators[i].setOccupied(true);
+         elevators[i].goToFloor(destinationFloor);
+         return;
        }
       if(elevators[i].isOccupied() && 
          elevators[i].isMoving() &&
          elevator[i].isFloorOnTheWay(requestingFloor)){
-           
-         }
+          elevators[i].goToFloor(destinationFloor);
+          return;
+      }
+      int diff = floorDiff(elevators[i].currentFloor, requestingFloor);
+      if(diff < closestElevDistance){
+        closestElevDistance = diff;
+        closestElevIndex = i;
+      }
+    }
+    elevators[closestElevIndex].goToFloor(destinationFloor);
+  }
+  
+  /* returns positive difference in floors */
+  private int floorDiff(int a, int b){
+    if(a < b){
+      return b-a;
+    } else {
+      return a-b;
     }
   }
   
