@@ -16,6 +16,7 @@ public class Elevator {
 	private int destination = 1;
 	private boolean occupied = false;
 	private boolean moving = false;
+	private boolean inService = true;
 
 	/* Initializes an Elevator with a maximum number of floors.
 	*  The minimum is 1, so there are no basements allowed in this simulation.
@@ -31,13 +32,55 @@ public class Elevator {
 	/* 
 	*  Instructs the Elevator to go to a certain floor.
 	*/
-	public void goToFloor(int floor){
+	public void goToFloor(int floor, boolean requestInternal){
 		if (floor > minFloor && floor <= maxFloors){
-			//...
+			// How does one gague at what floor the elevator currently is? Is there a time delay?
+			// How is travel time simulated?
+			// how does the elevator know if it is occupied?
+			// If the request is internal, the elevator is occupied.
+			} else {
+			if (this.currentFloor == floor) {
+				// this is where the elevator would open its doors and let in the passenger
+			} else {
+				this.moving = true;
+				// goes to the floor
+			}
 		}
 		else {
-			throw IllegalArgumentException("invalid floor request")
+			throw IllegalArgumentException("invalid floor request");
 		}
 	}
 	
+	/* Returns whether the elevator is occupied
+	*/
+	public boolean isOccupied(){
+		return this.occupied;
+	}
+	
+	/* Returns whether the elevator is moving
+	*/
+	public boolean isMoving(){
+		return this.moving;
+	}
+	
+	/* Returns whether the elevator is in service.
+	* Currently the elevator is out of service after 100 trips.
+	*/
+	public boolean isInService(){
+		return this.inService;
+	}
+	
+	/* Returns the current floor at which the elevator is located
+	*/
+	public int currentLocation(){
+		return this.currentFloor;
+	}
+	
+	/* Services the elevator.
+	*  It will be good for 100 more trips.
+	*/
+	public void serviceElevator(){
+		this.numTrips = 0;
+		this.inService = true;
+	}
 }
