@@ -70,8 +70,19 @@ public class Elevator {
 	
 	/* Returns the current floor at which the elevator is located
 	*/
-	public int currentLocation(){
+	public int currentFloor(){
 		return this.currentFloor;
+	}
+	
+	/* Is the floor on the way
+	*/
+	public boolean isFloorOnTheWay(int floor){
+		if (currentFloor < destination){
+			return floor >= currentFloor && floor <= destination;
+		}
+		else{
+			return floor <= currentFloor && floor >= destination;
+		}
 	}
 	
 	/* Services the elevator.
