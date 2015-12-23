@@ -10,11 +10,14 @@
 public class Elevator {
 
 	private int maxFloors = 1;
+	private int minFloor = 1;
 	private int numTrips = 0;
 	private int currentFloor = 1;
+	private int destination = 1;
 	private boolean occupied = false;
+	private boolean moving = false;
 
-	/* Initializes an Elevator with a maximum number of floor.
+	/* Initializes an Elevator with a maximum number of floors.
 	*  The minimum is 1, so there are no basements allowed in this simulation.
 	*  This can be further extended at a later time, if the need for basement
 	*  travel is required.
@@ -28,8 +31,13 @@ public class Elevator {
 	/* 
 	*  Instructs the Elevator to go to a certain floor.
 	*/
-	public void goToFloor(int destination){
-		
+	public void goToFloor(int floor){
+		if (floor > minFloor && floor <= maxFloors){
+			//...
+		}
+		else {
+			throw IllegalArgumentException("invalid floor request")
+		}
 	}
 	
 }
