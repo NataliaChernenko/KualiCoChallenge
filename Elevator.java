@@ -32,19 +32,11 @@ public class Elevator {
 	/* 
 	*  Instructs the Elevator to go to a certain floor.
 	*/
-	public void goToFloor(int floor, boolean requestInternal){
+	public void goToFloor(int floor){
 		if (floor > minFloor && floor <= maxFloors){
-			// How does one gague at what floor the elevator currently is? Is there a time delay?
-			// How is travel time simulated?
-			// how does the elevator know if it is occupied?
-			// If the request is internal, the elevator is occupied.
-			} else {
-			if (this.currentFloor == floor) {
-				// this is where the elevator would open its doors and let in the passenger
-			} else {
-				this.moving = true;
-				// goes to the floor
-			}
+			this.moving = true;
+			this.destination = floor;
+			this.numTrips++;
 		}
 		else {
 			throw IllegalArgumentException("invalid floor request");
@@ -55,6 +47,12 @@ public class Elevator {
 	*/
 	public boolean isOccupied(){
 		return this.occupied;
+	}
+	
+	/* Sets whether the elevator is occupied
+	*/
+	public void setOccupied(boolean occupied){
+		this.occupied = occupied;
 	}
 	
 	/* Returns whether the elevator is moving
