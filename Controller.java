@@ -4,9 +4,8 @@
 * Author: Natalia Chernenko
 *
 * This class controls a set of Elevators.
-* This simulation assumes that the request a passenger makes from outside the elevator
-* also indicates what floor the passenger wants to go to. 
-* This is in accordance with the requirement "An elevator request can be made at any floor, to go to any other floor."
+* This simulation assumes that a passenger requests an elevator to their floor from outside the elevator.
+* The passenger then selects their destination once they are inside the elevator.
 */
 
 public class Controller {
@@ -31,9 +30,11 @@ public class Controller {
     }
   }
   
-  /* This method send the closest elevator to a floor
+  /* 
+  * This method sends the closest elevator to a floor.
+  * It simulates a passenger requesting an elevator.
   */
-  public void sendClosestElevator(int requestingFloor, int destinationFloor) {
+  public void sendClosestElevator(int requestingFloor) {
     int closestElevDistance = maxFloors;
     int closestElevIndex = 0;
     for(int i = 0; i < numElevators; i++){
@@ -41,13 +42,13 @@ public class Controller {
           !elevators[i].isOccupied() &&
           elevators[i].isInService()){
          elevators[i].setOccupied(true);
-         elevators[i].goToFloor(destinationFloor);
+         elevators[i].goToFloor(requestingFloor);
          return;
        }
       if(elevators[i].isOccupied() && 
          elevators[i].isMoving() &&
          elevator[i].isFloorOnTheWay(requestingFloor)){
-          elevators[i].goToFloor(destinationFloor);
+          elevators[i].goToFloor(requestingFloor);
           return;
       }
       int diff = floorDiff(elevators[i].currentFloor, requestingFloor);
@@ -56,7 +57,7 @@ public class Controller {
         closestElevIndex = i;
       }
     }
-    elevators[closestElevIndex].goToFloor(destinationFloor);
+    elevators[closestElevIndex].goToFloor(requestingFloor);
   }
   
   /* returns positive difference in floors */
