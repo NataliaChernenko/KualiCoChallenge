@@ -51,7 +51,7 @@ public class Elevator {
   	public void floorRequestInside(int floor){
     		//validate floor
     		if(floor > maxFloors || floor < minFloor){
-    			throw IllegalArgumentException("invalid floor request from inside elevator")
+    			throw IllegalArgumentException("invalid floor request from inside elevator");
     		}
     		this.setOccupied(true);
     		this.goToFloor(floor);
