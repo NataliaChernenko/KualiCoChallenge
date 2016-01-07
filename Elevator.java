@@ -43,6 +43,19 @@ public class Elevator {
 		}
 	}
 	
+	/*
+  	* This method simulates a passenger request for a floor from inside an elevator.
+        */
+  	public void floorRequestInside(int floor){
+    		//validate floor
+    		if(floor > maxFloors || floor < minFloor){
+    			throw IllegalArgumentException("invalid floor request from inside elevator")
+    		}
+    		this.setOccupied(true);
+    		this.goToFloor(floor);
+  	}
+  
+	
 	/* Returns whether the elevator is occupied
 	*/
 	public boolean isOccupied(){
