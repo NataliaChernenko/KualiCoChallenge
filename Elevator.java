@@ -14,6 +14,7 @@ public class Elevator {
 	private int numTrips = 0;
 	private int currentFloor = 1;
 	private int destination = 1;
+	private long msBetweenFloors = 5000;
 	private boolean occupied = false;
 	private boolean moving = false;
 	private boolean inService = true;
@@ -37,8 +38,7 @@ public class Elevator {
 			this.moving = true;
 			this.destination = floor;
 			this.numTrips++;
-			//when elevator has arrived at destination, call:
-			//this.elevatorArrived(floor);
+			this.motionSim();
 		}
 		else {
 			throw IllegalArgumentException("invalid floor request");
@@ -59,19 +59,10 @@ public class Elevator {
   	
   	/* 
   	* This method is triggered when the elevator arrives at its destination.
-  	* This method needs to be triggered by an outside function that senses 
-  	* the elevator's location. This can be simulated with a timer or, in a  
-  	* physical elevator, with an actual sensor. For more realism, the timer
-  	* would need to account for emergency stops, power outages, or differences
-  	* in the speed of individual elevator motors. 
   	*/
-  	public void elevatorArrived(int floor){
-  		if(floor > maxFloors || floor < minFloor){
-    			throw IllegalArgumentException("invalid floor request from inside elevator")
-    		}
+  	public void elevatorArrived(){
     		this.setOccupied(false);
     		this.moving = false;
-    		this.currentFloor = floor;
   	}
   
 	
@@ -116,6 +107,42 @@ public class Elevator {
 		else{
 			return floor <= currentFloor && floor >= destination;
 		}
+	}
+	
+	/* 
+	* This method simulates the motion of the elevator.
+	* It relies on a given rate of motion between floors.
+	*/
+	private void motionSim(){
+		while(this.currentFloor != this.destination){
+			if(this.currentFloor < this.destination){
+				try {
+    					Thread.sleep(msBetweenFloors);
+    					this.currentFloor++;
+				} catch (InterruptedException e) {
+    					e.printStackTrace();
+				}	
+			} else {
+				try{
+					Thread.sleep(msBetweenFloors);
+					this.currentFloor--;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		this.elevatorArrived(this.destination);
+	}
+	
+	/*
+	* Sets the rate of motion between floors in milliseconds.
+	* This value must be positive.
+	*/
+	public void setRate(long rate) {
+		if rate < 1 {
+			throw IllegalArgumentException("invalid rate of motion for elevator")
+		}
+		this.msBetweenFloors = rate;
 	}
 	
 	/* Services the elevator.
