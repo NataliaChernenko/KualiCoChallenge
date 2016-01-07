@@ -33,11 +33,14 @@ public class Controller {
   /* 
   * This method sends the closest elevator to a floor.
   * It simulates a passenger requesting an elevator.
+  * requestingFloor is the floor at which the elevator is being requested
+  * goingUp is the desired direction of travel; equivalent to pushing the "up" or "down" buttons
   */
-  public void sendClosestElevator(int requestingFloor) {
+  public void sendClosestElevator(int requestingFloor, boolean goingUp) {
     int closestElevDistance = maxFloors;
     int closestElevIndex = 0;
     for(int i = 0; i < numElevators; i++){
+      //if an unoccupied elevator is already on the floor, it is the first choice
        if(elevators[i].currentFloor() == requestingFloor && 
           !elevators[i].isOccupied() &&
           elevators[i].isInService()){
@@ -45,12 +48,14 @@ public class Controller {
          elevators[i].goToFloor(requestingFloor);
          return;
        }
+      // if an occupied elevator is about to pass this floor on the way, it is the second choice 
       if(elevators[i].isOccupied() && 
          elevators[i].isMoving() &&
-         elevator[i].isFloorOnTheWay(requestingFloor)){
+         elevator[i].isFloorOnTheWay(requestingFloor, goingUp)){
           elevators[i].goToFloor(requestingFloor);
           return;
       }
+      //otherwise search for the closest elevator
       int diff = floorDiff(elevators[i].currentFloor, requestingFloor);
       if(diff < closestElevDistance){
         closestElevDistance = diff;
