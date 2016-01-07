@@ -89,11 +89,12 @@ public class Elevator {
   	* This method is triggered when the elevator arrives at its destination.
   	*/
   	public void elevatorArrived(){
-    		setOccupied(false);
     		moving = false;
     		destinations.remove(Integer.valueOf(currentDestination));
     		if (!destinations.isEmpty()) {
     			goToFloor(destinations(0));
+    		} else {
+    			setOccupied(false);
     		}
   	}
   
