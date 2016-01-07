@@ -37,6 +37,8 @@ public class Elevator {
 			this.moving = true;
 			this.destination = floor;
 			this.numTrips++;
+			//when elevator has arrived at destination, call:
+			//this.elevatorArrived(floor);
 		}
 		else {
 			throw IllegalArgumentException("invalid floor request");
@@ -53,6 +55,18 @@ public class Elevator {
     		}
     		this.setOccupied(true);
     		this.goToFloor(floor);
+  	}
+  	
+  	/* 
+  	* This method is triggered when the elevator arrives at its destination.
+  	*/
+  	public void elevatorArrived(int floor){
+  		if(floor > maxFloors || floor < minFloor){
+    			throw IllegalArgumentException("invalid floor request from inside elevator")
+    		}
+    		this.setOccupied(false);
+    		this.moving = false;
+    		this.currentFloor = floor;
   	}
   
 	
