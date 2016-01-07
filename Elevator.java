@@ -13,7 +13,8 @@ public class Elevator {
 	private int minFloor = 1;
 	private int numTrips = 0;
 	private int currentFloor = 1;
-	private int destination = 1;
+	private int currentDestination = 1;
+	private ArrayList<Integer> destinations;
 	private long msBetweenFloors = 5000;
 	private boolean occupied = false;
 	private boolean moving = false;
@@ -28,6 +29,7 @@ public class Elevator {
 		if (maxFloors > 0) {
 			this.maxFloors = maxFloors;
 		}
+		destinations = new ArrayList<Integer>();
 	}
 
 	/* 
@@ -36,7 +38,10 @@ public class Elevator {
 	public void goToFloor(int floor){
 		if (floor > minFloor && floor <= maxFloors){
 			this.moving = true;
-			this.destination = floor;
+			if (!destinations.contains(floor)){
+				this.destinations.add(floor);
+			}
+			this.currentDestination = findClosestDest();
 			this.numTrips++;
 			this.motionSim();
 		}
@@ -46,6 +51,29 @@ public class Elevator {
 	}
 	
 	/*
+	* Finds the closest destination
+	*/
+	private int findClosestDest(){
+		int closest = maxFoors;
+		while(destinations.hasNext()){
+			int diff = absDiff(destinations.next(), currentFloor);
+			if(diff < closest){
+				closest = diff;
+			}
+		}
+		return closest;
+	}
+	
+	/* returns positive difference in floors */
+  	private int absDiff(int a, int b){
+    		if(a < b){
+      			return b-a;
+		} else {
+      			return a-b;
+    		}
+  	}
+	
+	/*
   	* This method simulates a passenger request for a floor from inside an elevator.
         */
   	public void floorRequestInside(int floor){
@@ -53,16 +81,20 @@ public class Elevator {
     		if(floor > maxFloors || floor < minFloor){
     			throw IllegalArgumentException("invalid floor request from inside elevator");
     		}
-    		this.setOccupied(true);
-    		this.goToFloor(floor);
+    		setOccupied(true);
+    		goToFloor(floor);
   	}
   	
   	/* 
   	* This method is triggered when the elevator arrives at its destination.
   	*/
   	public void elevatorArrived(){
-    		this.setOccupied(false);
-    		this.moving = false;
+    		setOccupied(false);
+    		moving = false;
+    		destinations.remove(Integer.valueOf(currentDestination));
+    		if (!destinations.isEmpty()) {
+    			goToFloor(destinations(0));
+    		}
   	}
   
 	
@@ -101,11 +133,11 @@ public class Elevator {
 	/* Is the floor on the way
 	*/
 	public boolean isFloorOnTheWay(int floor, boolean goingUp){
-		if (currentFloor < destination && goingUp){
-			return floor >= currentFloor && floor <= destination;
+		if (currentFloor < currentDestination && goingUp){
+			return floor >= currentFloor && floor <= currentDestination;
 		}
 		else if (!goingUp) {
-			return floor <= currentFloor && floor >= destination;
+			return floor <= currentFloor && floor >= currentDestination;
 		}
 		else {
 			return false;
@@ -117,8 +149,8 @@ public class Elevator {
 	* It relies on a given rate of motion between floors.
 	*/
 	private void motionSim(){
-		while(this.currentFloor != this.destination){
-			if(this.currentFloor < this.destination){
+		while(this.currentFloor != this.currentDestination){
+			if(this.currentFloor < this.currentDestination){
 				try {
     					Thread.sleep(msBetweenFloors);
     					this.currentFloor++;
@@ -134,7 +166,7 @@ public class Elevator {
 				}
 			}
 		}
-		this.elevatorArrived(this.destination);
+		this.elevatorArrived();
 	}
 	
 	/*
