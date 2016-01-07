@@ -100,12 +100,15 @@ public class Elevator {
 	
 	/* Is the floor on the way
 	*/
-	public boolean isFloorOnTheWay(int floor){
-		if (currentFloor < destination){
+	public boolean isFloorOnTheWay(int floor, boolean goingUp){
+		if (currentFloor < destination && goingUp){
 			return floor >= currentFloor && floor <= destination;
 		}
-		else{
+		else if (!goingUp) {
 			return floor <= currentFloor && floor >= destination;
+		}
+		else {
+			return false;
 		}
 	}
 	
